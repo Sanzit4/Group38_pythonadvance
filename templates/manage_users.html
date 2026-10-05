@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Users{% endblock %}
+{% block content %}
+<h1>Users</h1>
+
+<div class="card" style="max-width:460px;">
+  <h2 style="margin-top:0;">Add User</h2>
+  <form method="POST">
+    <label>Full Name</label>
+    <input type="text" name="name" required>
+    <label>Email</label>
+    <input type="email" name="email" required>
+    <label>Password</label>
+    <input type="password" name="password" required>
+    <label>Department</label>
+    <select name="department" required>
+      {% for d in departments %}
+        <option value="{{ d.department_name }}">{{ d.department_name }}</option>
+      {% endfor %}
+    </select>
+    <label>Role</label>
+    <select name="role" required>
+      <option value="employee">Employee</option>
+      <option value="manager">Manager</option>
+      <option value="admin">Admin</option>
+    </select>
+    <button class="btn" type="submit">Add User</button>
+  </form>
+</div>
+
+<div class="card">
+  <table>
+    <tr><th>Name</th><th>Email</th><th>Department</th><th>Role</th><th>Status</th><th></th></tr>
+    {% for u in users %}
+    <tr>
+      <td>{{ u.name }}</td>
+      <td>{{ u.email }}</td>
+      <td>{{ u.department }}</td>
+      <td>{{ u.role }}</td>
+      <td>
+        {% if u.is_active %}
+          <span class="badge Approved">Active</span>
+        {% else %}
+          <span class="badge Rejected">Deactivated</span>
+        {% endif %}
+      </td>
+      <td>
+        {% if current_user and u.user_id != current_user.user_id %}
+        <form method="POST" action="{{ url_for('admin_toggle_active', user_id=u.user_id) }}" style="display:inline;">
+          <button class="btn small secondary" type="submit">
+            {{ "Reactivate" if not u.is_active else "Deactivate" }}
+          </button>
+        </form>
+        <form method="POST" action="{{ url_for('delete_user', user_id=u.user_id) }}"
+              onsubmit="return confirm('Delete {{ u.name }}? This cannot be undone.');" style="display:inline;">
+          <button class="btn small red" type="submit">Delete</button>
+        </form>
+        {% else %}
+        <span style="color:#999;">—</span>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}

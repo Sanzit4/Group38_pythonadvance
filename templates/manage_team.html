@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}My Team{% endblock %}
+{% block content %}
+<h1>My Team — {{ current_user.department }}</h1>
+<p style="color:var(--muted); margin-top:-4px;">
+  You can deactivate or reactivate employee accounts within your own department.
+  Deactivated employees can no longer log in, but their expense history is preserved.
+</p>
+
+<div class="card">
+  <table>
+    <tr><th>Name</th><th>Email</th><th>Status</th><th></th></tr>
+    {% for u in team %}
+    <tr>
+      <td>{{ u.name }}</td>
+      <td>{{ u.email }}</td>
+      <td>
+        {% if u.is_active %}
+          <span class="badge Approved">Active</span>
+        {% else %}
+          <span class="badge Rejected">Deactivated</span>
+        {% endif %}
+      </td>
+      <td>
+        <form method="POST" action="{{ url_for('manager_toggle_active', user_id=u.user_id) }}" style="margin:0;">
+          <button class="btn small secondary" type="submit">
+            {{ "Reactivate" if not u.is_active else "Deactivate" }}
+          </button>
+        </form>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="4" class="empty">No employees in your department yet.</td></tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}

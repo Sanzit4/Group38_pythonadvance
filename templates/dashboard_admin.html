@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<h1>Organisation Dashboard</h1>
+<div class="stat-grid">
+  <div class="stat total"><div class="label">Total Expenses</div><div class="value">₦{{ "{:,.0f}".format(totals.total) }}</div></div>
+  <div class="stat pending"><div class="label">Pending Approval</div><div class="value">₦{{ "{:,.0f}".format(totals.pending) }}</div></div>
+  <div class="stat approved"><div class="label">Approved</div><div class="value">₦{{ "{:,.0f}".format(totals.approved) }}</div></div>
+  <div class="stat rejected"><div class="label">Rejected</div><div class="value">₦{{ "{:,.0f}".format(totals.rejected) }}</div></div>
+</div>
+
+{% if flagged > 0 %}
+<div class="flash warning">⚠ {{ flagged }} pending expense(s) flagged as unusual — worth a closer look. See <a href="{{ url_for('review_expenses') }}">Review</a>.</div>
+{% endif %}
+
+<div class="card">
+  <a class="btn" href="{{ url_for('review_expenses') }}">Review Expenses</a>
+  <a class="btn secondary" href="{{ url_for('reports') }}">Reports</a>
+  <a class="btn secondary" href="{{ url_for('manage_departments') }}">Departments</a>
+  <a class="btn secondary" href="{{ url_for('manage_users') }}">Users</a>
+</div>
+
+<h2>Spending by Department</h2>
+<div class="card">
+  {% if by_department %}
+  <table>
+    <tr><th>Department</th><th>Total Spent</th></tr>
+    {% for d in by_department %}
+    <tr><td>{{ d.department }}</td><td>₦{{ "{:,.0f}".format(d.total) }}</td></tr>
+    {% endfor %}
+  </table>
+  {% else %}
+  <p class="empty">No expenses recorded yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

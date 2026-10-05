@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<h1>My Dashboard</h1>
+<div class="stat-grid">
+  <div class="stat total"><div class="label">Total Submitted</div><div class="value">₦{{ "{:,.0f}".format(totals.total) }}</div></div>
+  <div class="stat pending"><div class="label">Pending</div><div class="value">₦{{ "{:,.0f}".format(totals.pending) }}</div></div>
+  <div class="stat approved"><div class="label">Approved</div><div class="value">₦{{ "{:,.0f}".format(totals.approved) }}</div></div>
+</div>
+
+<div class="card">
+  <a class="btn" href="{{ url_for('new_expense') }}">+ Add Expense</a>
+  <a class="btn secondary" href="{{ url_for('my_expenses') }}">View All My Expenses</a>
+</div>
+
+<h2>Recent Submissions</h2>
+<div class="card">
+  {% if my_expenses %}
+  <table>
+    <tr><th>Date</th><th>Description</th><th>Amount</th><th>Category</th><th>Status</th></tr>
+    {% for e in my_expenses %}
+    <tr>
+      <td>{{ e.date[:10] }}</td>
+      <td>{{ e.description }}{% if e.flagged %} <span class="flag">⚠</span>{% endif %}</td>
+      <td>₦{{ "{:,.0f}".format(e.amount) }}</td>
+      <td>{{ e.category }}</td>
+      <td><span class="badge {{ e.status }}">{{ e.status }}</span></td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+  <p class="empty">No expenses submitted yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

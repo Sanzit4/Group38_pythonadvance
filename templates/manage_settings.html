@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Settings{% endblock %}
+{% block content %}
+<h1>Settings</h1>
+
+<div class="card" style="max-width:460px;">
+  <h2 style="margin-top:0;">Unusual Expense Threshold</h2>
+  <p style="color:var(--muted); font-size:0.9rem; margin-top:-8px;">
+    Any single expense above this amount is automatically flagged for review,
+    regardless of the employee's past spending history.
+  </p>
+  <form method="POST">
+    <label>Threshold Amount (₦)</label>
+    <input type="number" step="0.01" min="0" name="unusual_expense_threshold"
+           value="{{ '%.2f'|format(current_threshold) }}" required>
+    <button class="btn" type="submit">Save</button>
+  </form>
+</div>
+{% endblock %}
