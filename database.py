@@ -1,6 +1,6 @@
 """
 database.py
-SQLite schema creation + a single place to get a connection from.
+
 """
 
 import sqlite3
