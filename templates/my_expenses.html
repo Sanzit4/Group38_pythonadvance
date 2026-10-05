@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}My Expenses{% endblock %}
+{% block content %}
+<h1>My Expenses</h1>
+<div class="card">
+  {% if expenses %}
+  <table>
+    <tr><th>Date</th><th>Description</th><th>Amount</th><th>Category</th><th>Status</th></tr>
+    {% for e in expenses %}
+    <tr>
+      <td>{{ e.date[:10] }}</td>
+      <td>{{ e.description }}{% if e.flagged %} <span class="flag" title="Flagged as unusual">⚠</span>{% endif %}</td>
+      <td>₦{{ "{:,.0f}".format(e.amount) }}</td>
+      <td>{{ e.category }}</td>
+      <td><span class="badge {{ e.status }}">{{ e.status }}</span></td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+  <p class="empty">You haven't submitted any expenses yet.</p>
+  {% endif %}
+</div>
+<a class="btn" href="{{ url_for('new_expense') }}">+ Add Expense</a>
+{% endblock %}

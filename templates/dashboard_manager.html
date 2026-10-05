@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<h1>Manager Dashboard — {{ current_user.department }}</h1>
+<div class="stat-grid">
+  <div class="stat total"><div class="label">Department Total</div><div class="value">₦{{ "{:,.0f}".format(totals.total) }}</div></div>
+  <div class="stat pending"><div class="label">Pending</div><div class="value">₦{{ "{:,.0f}".format(totals.pending) }}</div></div>
+  <div class="stat approved"><div class="label">Approved</div><div class="value">₦{{ "{:,.0f}".format(totals.approved) }}</div></div>
+  <div class="stat rejected"><div class="label">Rejected</div><div class="value">₦{{ "{:,.0f}".format(totals.rejected) }}</div></div>
+</div>
+
+<div class="card">
+  <p>You have <strong>{{ pending_count }}</strong> expense(s) awaiting your review.</p>
+  <a class="btn" href="{{ url_for('review_expenses') }}">Review Expenses</a>
+  <a class="btn secondary" href="{{ url_for('new_expense') }}">+ Submit My Own Expense</a>
+</div>
+{% endblock %}

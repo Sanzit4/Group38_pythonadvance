@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Review Expenses{% endblock %}
+{% block content %}
+<h1>Review Expenses</h1>
+<p style="color:var(--muted);font-size:0.88rem;">
+  {% if current_user.role == 'manager' %}Showing expenses from {{ current_user.department }}.{% else %}Showing expenses from all departments.{% endif %}
+</p>
+
+<div class="filters card">
+  <a href="?status=Pending" class="{{ 'active' if status_filter == 'Pending' }}">Pending</a>
+  <a href="?status=Approved" class="{{ 'active' if status_filter == 'Approved' }}">Approved</a>
+  <a href="?status=Rejected" class="{{ 'active' if status_filter == 'Rejected' }}">Rejected</a>
+  <a href="?status=All" class="{{ 'active' if status_filter == 'All' }}">All</a>
+</div>
+
+<div class="card">
+  {% if expenses %}
+  <table>
+    <tr>
+      <th>Date</th><th>Employee</th><th>Description</th><th>Amount</th>
+      <th>Category</th>{% if current_user.role == 'admin' %}<th>Dept</th>{% endif %}
+      <th>Status</th><th>Action</th>
+    </tr>
+    {% for e in expenses %}
+    <tr>
+      <td>{{ e.date[:10] }}</td>
+      <td>{{ e.employee_name }}</td>
+      <td>{{ e.description }}{% if e.flagged %} <span class="flag" title="Flagged as unusual">⚠ unusual</span>{% endif %}</td>
+      <td>₦{{ "{:,.0f}".format(e.amount) }}</td>
+      <td>{{ e.category }}</td>
+      {% if current_user.role == 'admin' %}<td>{{ e.department }}</td>{% endif %}
+      <td><span class="badge {{ e.status }}">{{ e.status }}</span></td>
+      <td>
+        {% if e.status == 'Pending' %}
+        <form method="POST" action="{{ url_for('decide_expense', expense_id=e.expense_id) }}" class="inline">
+          <input type="hidden" name="decision" value="Approved">
+          <button class="btn green small" type="submit">Approve</button>
+        </form>
+        <form method="POST" action="{{ url_for('decide_expense', expense_id=e.expense_id) }}" class="inline" onsubmit="return addComment(this)">
+          <input type="hidden" name="decision" value="Rejected">
+          <input type="hidden" name="comment" class="comment-field">
+          <button class="btn red small" type="submit">Reject</button>
+        </form>
+        {% else %}
+        <span class="empty">Decided</span>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+  <p class="empty">No expenses in this category.</p>
+  {% endif %}
+</div>
+
+<script>
+function addComment(form) {
+  const reason = prompt("Optional: reason for rejection");
+  form.querySelector(".comment-field").value = reason || "";
+  return true;
+}
+</script>
+{% endblock %}

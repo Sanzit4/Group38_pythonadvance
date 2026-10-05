@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Add Expense{% endblock %}
+{% block content %}
+<div class="card" style="max-width:480px;">
+  <h1>Add Expense</h1>
+  <p style="color:var(--muted);font-size:0.88rem;">
+    Describe what you spent money on in plain language — the system will
+    automatically detect the category. No need to pick one yourself.
+  </p>
+  <form method="POST">
+    <label>Description</label>
+    <input type="text" name="description" required placeholder="e.g. Fuel for company vehicle">
+    <label>Amount (₦)</label>
+    <input type="number" name="amount" step="0.01" min="0" required placeholder="e.g. 45000">
+    <button class="btn" type="submit" style="width:100%;">Submit Expense</button>
+  </form>
+</div>
+{% endblock %}

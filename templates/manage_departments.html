@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Departments{% endblock %}
+{% block content %}
+<h1>Departments</h1>
+
+<div class="card" style="max-width:400px;">
+  <h2 style="margin-top:0;">Add Department</h2>
+  <form method="POST">
+    <label>Department Name</label>
+    <input type="text" name="department_name" required placeholder="e.g. Customer Support">
+    <button class="btn" type="submit">Add</button>
+  </form>
+</div>
+
+<div class="card">
+  <table>
+    <tr><th>Department</th><th>Expenses</th><th>Total Spent</th></tr>
+    {% for d in departments %}
+    <tr>
+      <td>{{ d.department_name }}</td>
+      <td>{{ d.expense_count }}</td>
+      <td>₦{{ "{:,.0f}".format(d.total_spent) }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}
