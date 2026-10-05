@@ -1,6 +1,6 @@
 """
 database.py
-SQLite schema creation + a single place to get a connection from.
+
 """
 
 import sqlite3
@@ -18,7 +18,6 @@ def get_connection():
 
 
 def hash_password(password: str) -> str:
-    """Salted SHA-256. Fine for a student project; use bcrypt/argon2 in production."""
     salt = "expense_system_salt"
     return hashlib.sha256((salt + password).encode()).hexdigest()
 
